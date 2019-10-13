@@ -3,6 +3,13 @@ import App from './App.vue'
 import router from './routers'
 import store from './stores'
 
+import axios from 'axios'
+Vue.prototype.axios = axios;
+
+Vue.filter('setWH',(url , arg)=>{//图片过滤器
+  return url.replace(/w\.h/,arg);
+});
+
 Vue.config.productionTip = false
 
 new Vue({
