@@ -1,13 +1,13 @@
 <template>
     <keep-alive>
-        <transition>
+        <!-- <transition> -->
         <router-view/>
-        </transition>
+        <!-- </transition> -->
     </keep-alive>
 </template>
 
 <style>
-.v-enter{
+/* .v-enter{
 opacity: 0;
 }
 .v-enter-to{
@@ -15,5 +15,5 @@ opacity: 1;
 }
 .v-enter-active{
 transition: all 2s ease;
-}
+} */
 </style>
