@@ -1,4 +1,4 @@
-<<template>
+<template>
     <div class="search_body">
 				<div class="search_input">
 					<div class="search_input_wrapper">
@@ -53,9 +53,12 @@
 
 		   message(newVal){
 			   var that=this;
+
+			   var cityId=this.$store.state.city.id;
+
 			   this.cancelRequest();
 
-			   this.axios.get('/api//searchList?cityId=10&kw='+newVal,{
+			   this.axios.get('/api//searchList?cityId='+cityId+'&kw='+newVal,{
                 cancelToken: new this.axios.CancelToken(function(c){//（终止多次请求）
                     that.source = c;
                 })
