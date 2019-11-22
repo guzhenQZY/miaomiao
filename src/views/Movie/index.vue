@@ -3,7 +3,7 @@
       <Header></Header>
             <div id="content">
                 <div class="movie_menu">
-                    <router-link tag="div" to="/movie/city" class="city_name">
+                    <router-link tag="div" to="/cities" class="city_name">
                         <span>{{$store.state.city.nm}}</span><i class="iconfont icon-lower-triangle"></i>
                     </router-link>
                     <div class="hot_swtich">
@@ -14,14 +14,15 @@
                         <i class="iconfont icon-sousuo"></i>
                     </router-link>
 			    </div>
-                <keep-alive>
-                    <!-- <transition> -->
-                    <router-view/>
-                    <!-- </transition> -->
-                </keep-alive>
+                <keep-alive> 
+                    <router-view/> <!--二级路由-->
+                </keep-alive> <!--把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染-->
             </div>
-           
+
       <Tabbar></Tabbar>
+      
+      <router-view name="detail" /><!--命名视图-->
+      
     </div>
 </template>
 
@@ -61,7 +62,7 @@
                         })
                     }
                 })
-            }, 3000);
+            }, 2000);
             
             
         }
@@ -82,13 +83,5 @@
 .movie_menu .search_entry.router-link-active{ color: #ef4238; border-bottom: 2px #ef4238 solid;}
 .movie_menu .search_entry i{  font-size:24px; color:red;}
 
-/* .v-enter{
-    opacity: 0;
-}
-.v-enter-to{
-    opacity: 1;
-}
-.v-enter-active{
-    transition: all 2s ease;
-} */
+
 </style>

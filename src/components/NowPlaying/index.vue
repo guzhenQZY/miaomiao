@@ -16,11 +16,11 @@
 				</div>
 			</li> -->
 		
-			<li class="pullDown">{{pullDownMsg}}</li>
+			<li class="pullDown">{{pullDownMsg}}</li>  <!--更新-->
 			<li v-for="item in movieList" :key="item.id">
-				<div class="pic_show" @tap="handleToDetail"><img :src="item.img | setWH('128.180')"></div>
+				<div class="pic_show" @tap="handleToDetail(item.id)"><img :src="item.img | setWH('128.180')"></div>
 				<div class="info_list">
-					<h2>{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png" /></h2>
+					<h2 @tap="handleToDetail(item.id)">{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png" /></h2>
 					<p>观众评 <span class="grade">{{item.sc}}</span></p>
 					<p>主演: {{item.star}}</p>
 					<p>{{item.showInfo}}</p>
@@ -37,6 +37,7 @@
 <script>
 
 import BScroll from 'better-scroll';
+import {Toast} from 'mint-ui'
 
     export default{
 	   name : 'NowPlaying',
@@ -45,11 +46,11 @@ import BScroll from 'better-scroll';
 			   movieList : [],
 			   pullDownMsg :'',
 			   isLoading : true,
-			   prevCityId : -1 , //保存上一次城市id
+			   prevCityId : -1 , //用来保存上一次城市id
 		   }
 		
 	   },
-	   activated (){
+	   activated (){//keep-alive 组件激活时调用
 
 		   var cityId = this.$store.state.city.id;
 
@@ -63,6 +64,9 @@ import BScroll from 'better-scroll';
 				   var msg =res.data.msg;
 				   if(msg==='ok'){
 					   this.movieList=res.data.data.movieList;
+					   if(this.movieList.length===0){
+						   Toast('当前城市没有上映电影!')
+					   }
 					   this.isLoading=false;
 					   this.prevCityId=cityId;
 					//    this.$nextTick(()=>{//数据渲染完成后
@@ -101,8 +105,9 @@ import BScroll from 'better-scroll';
 		   });
 	   },
 	   methods : {
-		   handleToDetail(){//tap点击事件方法
-			   console.log("handleToDetail")
+		   handleToDetail(movieId){//tap点击事件方法
+			//    console.log(moveId)
+			this.$router.push('/movie/detail/1/'+movieId)//跳转路由传递影片id
 		   },
 		   handleToScroll(pos){
 			   if(pos.y>30){

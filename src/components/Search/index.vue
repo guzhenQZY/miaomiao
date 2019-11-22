@@ -18,7 +18,7 @@
 								<p>2018-11-16</p>
 							</div>
 						</li> -->
-						<li v-for="item in movieList" :key="item.id">
+						<li v-for="item in movieList" :key="item.id" @click="handleToDetail(item.id)">
 							<div class="img"><img :src="item.img | setWH('128.180')"></div>
 							<div class="info">
 								<p><span>{{item.nm}}</span><span>{{item.sc}}</span></p>
@@ -44,10 +44,13 @@
 	   },
 	   methods :{
 			cancelRequest(){//防抖方法
-            if(typeof this.source ==='function'){
-                this.source('终止请求')
-            }
-        }
+				if(typeof this.source ==='function'){
+					this.source('终止请求')
+				}
+			},
+			handleToDetail(movieId){
+				this.$router.push('/movie/detail/3/'+movieId);//跳转到详情页
+			}
 	   },
 	   watch : {
 

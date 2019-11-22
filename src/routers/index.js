@@ -14,6 +14,12 @@ export default new Router({
     cinemaRouter,
     mineRouter,
     {
+      path : '/cities',
+          components : {//命名视图使用compons
+              cities : () => import('@/views/Movie/cities')
+          }
+    },
+    {
       path : '/',
       redirect :'/movie'
     }

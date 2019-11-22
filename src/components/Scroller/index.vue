@@ -22,7 +22,8 @@ import BScroll from 'better-scroll'
             var scroll=new BScroll(this.$refs.wrapper,{
                 //配置scroll内容
                 tap : true,
-                probeType: 1
+                probeType: 1,
+                scrollX : true,
             });
 
             this.scroll=scroll;
@@ -36,8 +37,8 @@ import BScroll from 'better-scroll'
             });
         },
         methods : {
-            toScrollTop(y){
-                this.scroll.scrollTo(0,y);//设置移动到的位置
+            toScrollTop(el){
+                this.scroll.scrollToElement(el);//设置移动到元素位置
             }
         }
     }

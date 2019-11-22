@@ -1,10 +1,27 @@
 <template>
+<div class="city">
+	<Header title="城市">
+		<i class="iconfont icon-close" @click="handleToBack"></i>
+	</Header>
     <div class="city_body">
 		<div class="city_list">
 			<!-- 热门城市 -->
 			<Loading v-if="isLoading" />
 			<Scroller v-else ref="city_list">
 			<div>
+				<!-- 当前城市 -->
+				<div class="city_now">
+					当前城市 : &nbsp;<b>{{$store.state.city.nm}}</b>
+				</div>
+				<!-- 定位城市 -->
+				<div class="city_gps" @tap="handleToCity(cityGps.nm,cityGps.id)">
+					<i class="iconfont icon-LC_icon_gps_line_2"></i>
+					&nbsp;
+					<b>{{cityGps.nm}}</b>
+					&nbsp;
+					<span>GPS定位</span>
+				</div>
+				<!-- 热门城市 -->
 				<div class="city_hot">
 					<h2>热门城市</h2>
 					<ul class="clearfix">
@@ -38,21 +55,35 @@
 		</div>
 		
 	</div>
+</div>
 </template>
 
 <script>
-
+import Header from '@/components/Header'
+import {Toast} from 'mint-ui'
     export default{
 	   name : 'City',
+	   components:{
+		   Header,
+	   },
 	   data(){
 		   return{
 			   cityList : [],
 			   hotList : [],
-			   isLoading :true
+			   isLoading :true,
+			   cityGps : {id:0,nm:'正在加载...'},//定位城市的默认值
 		   }
 	   },
 		mounted(){
+			//城市定位
+			this.axios.get('/api/getLocation').then((res)=>{
+					var msg = res.data.msg;
+					if(msg==='ok'){
+						this.cityGps=res.data.data;
+					}
+			});
 
+			//热门城市、城市列表,存入本地存储
 			var cityList=window.localStorage.getItem('cityList');
 			var hotList=window.localStorage.getItem('hotList');
 			if(cityList&&hotList){
@@ -77,7 +108,10 @@
 			
 		},
 		methods : {
-			formatcityList(cities){
+			handleToBack(){
+				this.$router.back();
+			},
+			formatcityList(cities){//整理城市列表格式
 				var cityList =[];
 				var hotList = [];
 
@@ -131,27 +165,38 @@
 				this.$refs.city_list.toScrollTop(h2[index])//获取组件内的toScrollTop方法
 			},
 			handleToCity(nm,id){
+				if(!id){
+					Toast("当前城市定位还未完成!")
+					return
+				}
 				this.$store.commit('city/CITY_INFO',{nm,id});//修改状态管理
 				window.localStorage.setItem('nowNm',nm);
 				window.localStorage.setItem('nowId',id);
-				this.$router.push('/movie/nowPlaying');
+				this.$router.back();
 			}
 		}
     }
 </script>
 
-<style scoped>
-#content .city_body{ margin-top: 45px; display: flex; width:100%; position: absolute; top: 0; bottom: 0;}
+<style lang="scss" scoped>
+.city{ height: 100%; width:100%; position: absolute; top: 0; left: 0;background: white;z-index: 100;animation: .3s slideMove;}
+@keyframes slideMove{
+	0% {opacity: 0.3;}
+	100% {opacity: 1;}
+} 
+
+
+.city_body{ display: flex; width:100%;height: calc(100% - 50px);}
 .city_body .city_list{ flex:1; overflow: auto; background: #FFF5F0;}
 .city_body .city_list::-webkit-scrollbar{
     background-color:transparent;
     width:0;
 }
+.city_body .city_now{padding-left: 15px; line-height: 30px; font-size: 14px; background:#F0F0F0; font-weight: normal;margin-top: 15px;}
+.city_body .city_gps{margin-top: 15px;padding-left: 15px; i{color :#f03d37;font-weight: bold;}span{font-size: 12px;color: #ccc}}
 .city_body .city_hot{ margin-top: 20px;}
 .city_body .city_hot h2{ padding-left: 15px; line-height: 30px; font-size: 14px; background:#F0F0F0; font-weight: normal;}
-.city_body .city_hot ul{}
 .city_body .city_hot ul li{ float: left; background: #fff; width: 29%; height: 33px; margin-top: 15px; margin-left: 3%; padding: 0 4px; border: 1px solid #e6e6e6; border-radius: 3px; line-height: 33px; text-align: center; box-sizing: border-box;}
-.city_body .city_sort{}
 .city_body .city_sort div{ margin-top: 20px;}
 .city_body .city_sort h2{ padding-left: 15px; line-height: 30px; font-size: 14px; background:#F0F0F0; font-weight: normal;}
 .city_body .city_sort ul{ padding-left: 10px; margin-top: 10px;}
